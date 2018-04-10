@@ -1,6 +1,8 @@
 WhatArticle
 
-Look at comments from subreddits and judge whether the comment is for the right title or not. Gain score from correct choices.
+In order to run the app:
 
-Please make changes to dev branch and not master
- 
+git clone https://github.com/patel445/WhatArticle.git<br />
+cd WhatArticle<br />
+npm install<br />
+npm start
