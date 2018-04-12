@@ -11,36 +11,27 @@ import appAuthentication #module in system path
 fbase=appAuthentication.fbase
 reddit=appAuthentication.reddit
 
-fbasePath='/' #path in firebase to store data
+fbasePath='RedditScrape/' #path in firebase to store data
 
-if not os.path.isfile('subreddits.txt'):
-	print("Need to specify subreddit names on individual lines in file 'subreddits.txt'")
+metadata=fbase.get(fbasePath+'metadata/', None)
+#print(metadata)
+if not metadata:
+	print("No metadata found. Exiting")
 	sys.exit()
+subreddits=metadata['subreddits']
 
-submissionIds=[]
-submissions=fbase.get(fbasePath+'submissions/', None)
-if submissions:
-	submissionIds=list(submissions.keys())
+if 'posts' in metadata.keys():
+	posts=metadata['posts']
 else:
-	submissions={}
-
-subreddits=fbase.get(fbasePath+'subreddits/', None)
-if not subreddits:
-	print("No subreddits in firebase. Exiting")
-	sys.exit()
-print(str(subreddits))
+	posts={}
 
 def get_hot(subname, num_posts=20):
 	subreddit=reddit.subreddit(subname)
-	submissions=subreddit.hot(limit=num_posts)
-	return submissions
+	posts=subreddit.hot(limit=num_posts)
+	return posts
 
-def get_collected_ids(path=fbasePath+'collected_ids'):
-	result=fbase.get(path, None)
-	return result
-
-def collect_submission_comments(submission):
-	submission.comments.replace_more(limit=None)
+def collect_submission_comments(post):
+	post.comments.replace_more(limit=None)
 	commentdata={}
 	#commentdata['name']=submission.title
 	#commentdata['url']=submission.url
@@ -48,8 +39,8 @@ def collect_submission_comments(submission):
 	#commentdata['datetime']=datetime.datetime.fromtimestamp(submission.created)
 	comments=[]
 	#commentdata['comments']=comments
-	for c in submission.comments:
-		comments.append([c.body, c.score])
+	for c in post.comments:
+		comments.append([c.body, c.score, c.id])
 	return comments
 
 def save_data(data):
@@ -59,24 +50,35 @@ def save_data(data):
 
 def upload_data(data, path=fbasePath):
 	result=fbase.patch(path, data)
-	print(result)	
+	#print(result)	
 
-def scrape_data(limit=10):
+def scrape_data(limit=3):
 	#limit=number of submissions to get from each subreddit
+	secondPass=[]
 	for subname in subreddits:
 		subreddit=reddit.subreddit(subname)
-		for submission in subreddit.hot(limit=limit):
-			subID=submission.id
-			if subID not in submissionIds:
-				submissionIds.append(subID)
-				subMeta={}
-				subMeta['datetime']=datetime.datetime.fromtimestamp(submission.created)		
-				subMeta['title']=submission.title
-				subMeta['url']=submission.url
-				subMeta['subreddit']=subname
-				comments=collect_submission_comments(submission)
-				upload_data({subID: subMeta}, path=fbasePath+'submissions/')
-				upload_data({subID: comments}, path=fbasePath+'comments/')
+		if subname in posts.keys():
+			postIDs=list(posts[subname].keys())
+		else:
+			postIDs=[]
+		for post in subreddit.hot(limit=limit):
+			postID=post.id
+			if postID not in postIDs:
+				postIDs.append(postID)
+				postMeta={}
+				postMeta['datetime']=datetime.datetime.fromtimestamp(post.created)		
+				postMeta['title']=post.title
+				postMeta['url']=post.url
+				postMeta['subreddit']=subname
+				postMeta['id']=postID
+				comments=collect_submission_comments(post)
+				upload_data({postID: postMeta}, path=fbasePath+'metadata/posts/'+subname+'/')
+				upload_data({postID: comments}, path=fbasePath+'comments/')
+			else:
+				secondPass.append(post)
+		for post in secondPass:
+			comments=collect_submission_comments(post)
+			upload_data({post.id: comments}, path=fbasePath+'comments/')
 						
 if __name__=='__main__':
 	upload_data({'hello world': "hello firebase"}, path='/')
