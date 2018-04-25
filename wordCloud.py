@@ -6,6 +6,7 @@ import string
 import time
 import numpy as np
 import datetime
+from multiprocessing import Process, Queue
 
 #Processing module to parse the frequencies of words in subreddits and continuously update a wordcloud
 #testing
@@ -26,6 +27,13 @@ timeQueue=[] #keeping track the timestamps of comments being considered
 subs=reddit.subreddit("all") #looking through all subreddits to test
 wordDict={}
 trantab=str.maketrans('', '', string.punctuation)
+procTime=[0]
+streamTime=[0]
+
+"""class CommentStreamer:
+	#Class to stream comments based on subreddit input
+	for sub in subreddits:"""
+		
 	
 def comment_tokens(comment):
 	comment=comment.translate(trantab)
@@ -121,12 +129,67 @@ def stream_word_cloud():
 		add_comments(100)
 		
 		
-def test():
+
+			
+def testTime(numcomments):
+	
+	def proc(subname, numc):
+		sub=reddit.subreddit(subname)
+		comments=[]
+		i=0
+		buff=100
+		if buff>numc:
+			buff=numc
+		numloops=numc//buff
+		for j in range(0, numloops):
+			commentStream=sub.stream.comments()
+			for c in commentStream:
+				comments.append(c)
+				i+=1
+				if i%buff==0:
+					break
+			
+	processes=[]
+	sreddits=['worldnews', 'politics', 'news']
+	numProcesses=len(sreddits)
+	for s in sreddits:
+		processes.append(Process(target=proc, args=(s, numcomments//len(sreddits),)))
+	print("Using "+str(numProcesses)+" processes to get "+str(numcomments)+" comments")
+	start=time.clock()
+	for p in processes:
+		p.start()
+	for p in processes:
+		p.join()
+	end=time.clock()
+	print("Time: "+str(end-start))
+	print("Using a single process to get "+str(numcomments)+" comments.")
+	start=time.clock()
+	proc("+".join(sreddits), numcomments)
+	end=time.clock()
+	print("time: "+str(end-start))
+
+	
+
+	
+	
+	
+	
+if __name__=='__main__':
+	testTime(5000)
+			
+		
+	
+
+	
+	
+		
+	
+"""def test():
 	#animating barchart
 	for i in range(0, 5):
 		add_comments(100)
 		
-	"""for i in range(0, 10):
+	for i in range(0, 10):
 		start=time.clock()
 		topWords=find_top_words()
 		for word in topWords:
@@ -134,7 +197,7 @@ def test():
 		remove_comments(100)
 		add_comments(100)
 		end=time.clock()
-		print("Time: "+str(start-end))"""
+		print("Time: "+str(start-end))
 	
 	import matplotlib.pyplot as plt
 	import matplotlib.animation as anim
@@ -160,22 +223,7 @@ def test():
 		ax.bar(list(range(0, 10)), yval, 0.5, color='r')
 		
 	a=anim.FuncAnimation(fig, update, frames=None, repeat=False)
-	plt.show()
-			
-		
-	
-if __name__=='__main__':
-	#test()
-	stream_word_cloud()
-			
-		
-	
-
-	
-	
-		
-	
-	
+	plt.show()"""
 	
 	
 	
