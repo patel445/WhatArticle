@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Login
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="login">
+
+  <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
+
+    <ion-item>
+      <ion-label stacked>Email</ion-label>
+      <ion-input formControlName="email" type="email" placeholder="Enter Email Address" 
+        [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.dirty"></ion-input>
+    </ion-item>
+    <ion-item class="error-message" 
+      *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">
+      <p>Please enter a valid email</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Password</ion-label>
+      <ion-input formControlName="password" type="password" placeholder="Enter Password"
+        [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.dirty"></ion-input>
+    </ion-item>
+    <ion-item class="error-message" 
+      *ngIf="!loginForm.controls.password.valid  && loginForm.controls.password.dirty">
+      <p>You need more than 6 letters to make your password secure</p>
+    </ion-item>
+
+    <button ion-button block type="submit">
+      Login
+    </button>
+
+  </form>
+
+  <button ion-button block clear (click)="goToSignup()">
+    Create Account
+  </button>
+
+  <button ion-button block clear (click)="goToResetPassword()">
+    Password Reset
+  </button>
+</ion-content>
