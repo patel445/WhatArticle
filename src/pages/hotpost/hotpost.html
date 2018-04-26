@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <ion-buttons left>
+            <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+        </ion-buttons>
+        <ion-title>
+            HotPost
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button color="danger" (click)="logMeOut()">Logout</button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <p>Below Are All Hotest Posts</p>
+  <ion-content>
+   <ion-list> 
+    <ion-item *ngFor="let post of hotposts">
+      <p>{{post}}</p>
+    </ion-item>
+   </ion-list>
+</ion-content>`
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+</ion-content>

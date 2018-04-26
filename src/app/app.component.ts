@@ -3,6 +3,7 @@ import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
+import { HotPost } from '../pages/hotpost/hotpost';
 import { AboutPage } from '../pages/about/about';
 import firebase from 'firebase';
 
@@ -21,6 +22,7 @@ export class MyApp {
     this.zone = new NgZone({});
     this.pages = [
       { title: 'Homepage', component: HomePage },
+      { title: 'HotPost', component: HotPost },
       { title: 'About', component: AboutPage }
     ];
     const config = {
