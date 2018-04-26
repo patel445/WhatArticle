@@ -117,40 +117,19 @@ class WordCloud:
 		return topWordDict, self.timeQueue[-1]-self.timeQueue[0]
 	
 	
-def save_wordcloud(word_dict, timediff, subreddit=None, path='/word_clouds/'):
+def save_wordcloud(worddict, timediff, label, info=[], path='wordclouds'):
 	#putting word cloud in firebase
 	timestring="Data recorded at "+str(datetime.datetime.now())+" over the course of "+str(int(timediff))+" seconds."
-	data={}
-	data['words']=word_dict
-	data['timestring']=timestring
-	if subreddit is None:
-		subreddit="All"
+	info.append(timestring)
+	for word in worddict.keys():
+		info.append(str(word)+": "+str(worddict[word]))
+	data={label: info}
+	print(str(data))
 	try:
-		fbase.patch(path+subreddit+'/', data)
+		fbase.patch(path, data)
 	except Exception as e:
 		print("Firebase patch error")
 
-def make_hot_wordclouds():
-	all=reddit.subreddit('all')
-	for post in all.hot(limit=12):
-		data={}
-		postMeta={}
-		postMeta['datetime']=str(datetime.datetime.fromtimestamp(post.created))
-		postMeta['title']=post.title
-		postMeta['url']=post.url
-		postMeta['id']=post.id
-		comments=[]
-		post.comments.replace_more(limit=None)
-		for comment in post.comments:
-			comments.append(comment)
-		wc=WordCloud(None)
-		wc.add_comments(comments)
-		topWordDict, timediff=wc.find_top_words()
-		postMeta['wordcloud']=topWordDict
-		data[post.id]=postMeta
-		fbase.patch('hot_posts/', data)
-		
-		
 		
 def single_thread(subredditNames=subreddits):
 	commentStreamer=CommentStreamer(subredditNames)
@@ -162,14 +141,15 @@ def single_thread(subredditNames=subreddits):
 			comments=commentStreamer.get_comments(subname, 100)
 			wc.add_comments(comments)
 		topWordDict, timediff=wc.find_top_words()
-		save_wordcloud(topWordDict, timediff, subreddit=subname)
+		save_wordcloud(topWordDict, timediff, subname, ['subreddit: '+subname])
 	for i in range(0, 25):
 		for wc in wordClouds:
 			wc.remove_comments(100)
 			comments=commentStreamer.get_comments(wc.subname, 100)
 			wc.add_comments(comments)
 			topWordDict, timediff=wc.find_top_words()
-			save_wordcloud(topWordDict, timediff, subreddit=wc.subname)
+			print(str(topWordDict))
+			save_wordcloud(topWordDict, timediff, wc.subname, ['subreddit: '+subname])
 		
 def multi_thread(num_threads=4):
 	while True:
@@ -226,6 +206,32 @@ def testTime(numcomments):
 	end=time.clock()
 	print("time: "+str(end-start))
 
+
+def make_hot_wordclouds():
+	all=reddit.subreddit('all')
+	arrayData=[]
+	label='hot_posts'
+	
+	for post in all.hot(limit=20):
+		postMeta={}
+		postMeta['datetime']=str(datetime.datetime.fromtimestamp(post.created))
+		postMeta['title']=post.title
+		postMeta['url']=post.url
+		postMeta['id']=post.id
+		post.comments.replace_more(limit=None)
+		comments=[]
+		for comment in post.comments:
+			comments.append(comment)
+		wc=WordCloud(None)
+		postMeta['Number of comments']=len(comments)
+		wc.add_comments(comments)
+		topWordDict, timediff=wc.find_top_words()
+		postMeta['top_words']=topWordDict
+		postMeta['Subreddit']=post.subreddit.display_name
+		arrayData.append(postMeta)
+	#	postMeta['wordcloud']=topWordDict 
+	fbase.patch('/', {'hot_posts': arrayData})
+		
 		
 if __name__=='__main__':
 	#multi_thread()
