@@ -7,7 +7,6 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { AuthProvider } from '../providers/auth/auth';
-import { RedditData } from '../providers/reddit-data';
 import { HttpModule } from '@angular/http';
 
 @NgModule({
@@ -31,8 +30,7 @@ import { HttpModule } from '@angular/http';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider,
-    RedditData
+    AuthProvider
   ]
 })
 export class AppModule {}

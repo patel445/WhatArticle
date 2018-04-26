@@ -19,11 +19,35 @@
   <p>
     <a href="https://whatarticle.firebaseio.com/word_clouds.json?print=pretty">Link to word clouds</a>
   </p>
-  <h2>Posts</h2>
+  <p>Below Are The most common words used and occurances from subreddits on reedit</p>
   <ion-content>
   <ion-list>
     <ion-item *ngFor="let post of posts">
-      <img [src]="post.data.url" />
+      <p>{{post}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post1 of posts2">
+      <p>{{post1}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post2 of posts3">
+      <p>{{post2}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post3 of posts4">
+      <p>{{post3}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post4 of posts5">
+      <p>{{post4}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post5 of posts6">
+      <p>{{post5}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post6 of posts7">
+      <p>{{post6}}</p>
+    </ion-item>
+    <ion-item *ngFor="let post7 of posts8">
+      <p>{{post7}}</p>
+    </ion-item>
+      <ion-item *ngFor="let post8 of posts9">
+      <p>{{post8}}</p>
     </ion-item>
   </ion-list>
 </ion-content>`
