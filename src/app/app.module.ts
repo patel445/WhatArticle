@@ -3,11 +3,12 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { AuthProvider } from '../providers/auth/auth';
+import { RedditData } from '../providers/reddit-data';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AuthProvider } from '../providers/auth/auth';
     AboutPage
   ],
   imports: [
+    HttpModule,
     BrowserModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -29,7 +31,8 @@ import { AuthProvider } from '../providers/auth/auth';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider
+    AuthProvider,
+    RedditData
   ]
 })
 export class AppModule {}
