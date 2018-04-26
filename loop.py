@@ -9,7 +9,7 @@ from multiprocessing import Process, Queue
 def static_data_thread(i):
 	while True:
 		wordCloud.make_hot_wordclouds()
-		collectData.scrape_data(limit=10)
+		#collectData.scrape_data(limit=10)
 		modData.comment_match(100)
 		modData.up_or_down(100)
 	

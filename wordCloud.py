@@ -124,7 +124,7 @@ def save_wordcloud(worddict, timediff, label, info=[], path='wordclouds'):
 	for word in worddict.keys():
 		info.append(str(word)+": "+str(worddict[word]))
 	data={label: info}
-	print(str(data))
+	#print(str(data))
 	try:
 		fbase.patch(path, data)
 	except Exception as e:
@@ -148,7 +148,7 @@ def single_thread(subredditNames=subreddits):
 			comments=commentStreamer.get_comments(wc.subname, 100)
 			wc.add_comments(comments)
 			topWordDict, timediff=wc.find_top_words()
-			print(str(topWordDict))
+			#print(str(topWordDict))
 			save_wordcloud(topWordDict, timediff, wc.subname, ['subreddit: '+subname])
 		
 def multi_thread(num_threads=4):
@@ -164,10 +164,10 @@ def multi_thread(num_threads=4):
 			processes.append(p)
 			i=i+inc
 			j=j+inc
-		for p in processes:
-			p.start()
-		for p in processes:
-			p.join()
+		for proc in processes:
+			proc.start()
+		for proc in processes:
+			proc.join()
 			
 def testTime(numcomments):
 	
@@ -228,8 +228,10 @@ def make_hot_wordclouds():
 		topWordDict, timediff=wc.find_top_words()
 		postMeta['top_words']=topWordDict
 		postMeta['Subreddit']=post.subreddit.display_name
-		arrayData.append(postMeta)
-	#	postMeta['wordcloud']=topWordDict 
+		postStr=""
+		for key in postMeta.keys():
+			postStr=postStr+key+": "+str(postMeta[key])+";"
+		arrayData.extend(postStr.split(";"))
 	fbase.patch('/', {'hot_posts': arrayData})
 		
 		
