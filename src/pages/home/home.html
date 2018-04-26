@@ -1,19 +1,42 @@
 <ion-header>
-  <ion-navbar>
-    <ion-buttons left>
-      <button ion-button menuToggle>
+    <ion-navbar>
+        <ion-buttons left>
+            <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-    </ion-buttons>
-    <ion-title>
-      Homepage
-    </ion-title>
-    <ion-buttons end>
-    <button ion-button color="danger" (click)="logMeOut()">Logout</button>
-    </ion-buttons>
-  </ion-navbar>
+        </ion-buttons>
+        <ion-title>
+            Homepage
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button color="danger" (click)="logMeOut()">Logout</button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  
+    <ion-list>
+
+       <ion-item-sliding>
+        <button ion-item>
+          <a href= "">Link from database</a>
+        </button>
+
+            <ion-item-options side="right">
+                <button ion-button>Delete</button>
+            </ion-item-options>
+        </ion-item-sliding>
+      
+        <ion-item-sliding>
+
+        <button ion-item>
+          <a href= "">Link from database</a>
+        </button>
+
+            <ion-item-options side="right">
+                <button ion-button>Delete</button>
+            </ion-item-options>
+        </ion-item-sliding>
+
+    </ion-list>
 </ion-content>
