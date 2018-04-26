@@ -1,13 +1,13 @@
-//import { NgModule } from '@angular/core';
-//import { IonicPageModule } from 'ionic-angular';
-//import { HotPage } from './hotpage';
+import { NgModule } from '@angular/core';
+import { IonicPageModule } from 'ionic-angular';
+import { HotPost } from './hotpost';
 
-//@NgModule({
-//  declarations: [
-//    HotPage,
-//  ],
-//  imports: [
-//    IonicPageModule.forChild(AboutPage),
- // ],
-//})
-//export class HotPageModule {}
+@NgModule({
+  declarations: [
+    HotPost
+  ],
+  imports: [
+    IonicPageModule.forChild(HotPost),
+  ],
+})
+export class HotPostModule {}

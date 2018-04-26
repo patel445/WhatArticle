@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { HotPost } from '../pages/hotpost/hotpost';
 import { AboutPage } from '../pages/about/about';
 import { AuthProvider } from '../providers/auth/auth';
 import { HttpModule } from '@angular/http';
@@ -13,6 +14,7 @@ import { HttpModule } from '@angular/http';
   declarations: [
     MyApp,
     HomePage,
+    HotPost,
     AboutPage
   ],
   imports: [
@@ -24,6 +26,7 @@ import { HttpModule } from '@angular/http';
   entryComponents: [
     MyApp,
     HomePage,
+    HotPost,
     AboutPage
   ],
   providers: [
